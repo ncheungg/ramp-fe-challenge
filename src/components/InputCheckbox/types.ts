@@ -1,8 +1,9 @@
-import { FunctionComponent } from "react"
+import { FunctionComponent, MouseEvent } from "react"
 
 type InputCheckboxProps = {
   id: string | number
   checked?: boolean
+  onClick: (event: MouseEvent) => void
   onChange: (newValue: boolean) => void
   disabled?: boolean
 }
