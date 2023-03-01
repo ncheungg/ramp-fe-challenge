@@ -1,4 +1,5 @@
 import { MouseEvent, useState } from "react"
+import { setTransactionApproval } from "src/utils/requests"
 import { InputCheckbox } from "../InputCheckbox"
 import { TransactionPaneComponent } from "./types"
 
@@ -8,6 +9,13 @@ export const TransactionPane: TransactionPaneComponent = ({
   setTransactionApproval: consumerSetTransactionApproval,
 }) => {
   const [approved, setApproved] = useState(transaction.approved)
+
+  const toggleApprove = (e: MouseEvent) => {
+    e.preventDefault()
+
+    setApproved(!approved)
+    setTransactionApproval({ transactionId: transaction.id, value: !approved })
+  }
 
   return (
     <div className="RampPane">
@@ -22,13 +30,13 @@ export const TransactionPane: TransactionPaneComponent = ({
         id={transaction.id}
         checked={approved}
         disabled={loading}
-        onClick={(e: MouseEvent) => setApproved(!approved)}
+        // onClick={(e: MouseEvent) => setApproved(!approved)}
+        onClick={toggleApprove}
         onChange={async (newValue) => {
           await consumerSetTransactionApproval({
             transactionId: transaction.id,
             newValue,
           })
-          console.log("here")
           setApproved(newValue)
         }}
       />

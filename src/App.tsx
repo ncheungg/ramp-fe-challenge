@@ -19,6 +19,7 @@ export function App() {
   const loadAllTransactions = useCallback(async () => {
     setIsLoading(true)
     transactionsByEmployeeUtils.invalidateData()
+    paginatedTransactionsUtils.invalidateData()
 
     await employeeUtils.fetchAll()
     await paginatedTransactionsUtils.fetchAll()
@@ -46,8 +47,6 @@ export function App() {
       loadAllTransactions()
     }
   }, [employeeUtils.loading, employees, loadAllTransactions])
-
-  console.log({ transactions, selectedEmployee, paginatedTransactions })
 
   return (
     <Fragment>
