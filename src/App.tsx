@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react"
+import { Fragment, useCallback, useEffect, useState } from "react"
 import { InputSelect } from "./components/InputSelect"
 import { Instructions } from "./components/Instructions"
 import { Transactions } from "./components/Transactions"
@@ -15,24 +15,6 @@ export function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [transactions, setTransactions] = useState<Transaction[] | null>(null)
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(EMPTY_EMPLOYEE)
-
-  // const transactions: Transaction[] | null = useMemo(
-  //   () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
-  //   // () => {
-  //   //   if (
-  //   //     paginatedTransactions?.data &&
-  //   //     paginatedTransactions?.nextPage &&
-  //   //     paginatedTransactions?.nextPage > 0
-  //   //   ) {
-  //   //     return (transactions as Transaction[]).concat(paginatedTransactions?.data)
-  //   //   }
-  //   //   if (transactionsByEmployee) {
-  //   //     return transactionsByEmployee
-  //   //   }
-  //   //   return null
-  //   // },
-  //   [paginatedTransactions, transactionsByEmployee]
-  // )
 
   const loadAllTransactions = useCallback(async () => {
     setIsLoading(true)
@@ -73,7 +55,7 @@ export function App() {
         <hr className="RampBreak--l" />
 
         <InputSelect<Employee>
-          isLoading={isLoading}
+          isLoading={employeeUtils.loading}
           defaultValue={EMPTY_EMPLOYEE}
           items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
           label="Filter by employee"
