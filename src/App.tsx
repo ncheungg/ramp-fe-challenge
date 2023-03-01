@@ -6,18 +6,33 @@ import { useEmployees } from "./hooks/useEmployees"
 import { usePaginatedTransactions } from "./hooks/usePaginatedTransactions"
 import { useTransactionsByEmployee } from "./hooks/useTransactionsByEmployee"
 import { EMPTY_EMPLOYEE } from "./utils/constants"
-import { Employee } from "./utils/types"
+import { Employee, Transaction } from "./utils/types"
 
 export function App() {
   const { data: employees, ...employeeUtils } = useEmployees()
   const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
   const [isLoading, setIsLoading] = useState(false)
+  const [transactions, setTransactions] = useState<Transaction[] | null>(null)
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(EMPTY_EMPLOYEE)
 
-  const transactions = useMemo(
-    () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
-    [paginatedTransactions, transactionsByEmployee]
-  )
+  // const transactions: Transaction[] | null = useMemo(
+  //   () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
+  //   // () => {
+  //   //   if (
+  //   //     paginatedTransactions?.data &&
+  //   //     paginatedTransactions?.nextPage &&
+  //   //     paginatedTransactions?.nextPage > 0
+  //   //   ) {
+  //   //     return (transactions as Transaction[]).concat(paginatedTransactions?.data)
+  //   //   }
+  //   //   if (transactionsByEmployee) {
+  //   //     return transactionsByEmployee
+  //   //   }
+  //   //   return null
+  //   // },
+  //   [paginatedTransactions, transactionsByEmployee]
+  // )
 
   const loadAllTransactions = useCallback(async () => {
     setIsLoading(true)
@@ -36,6 +51,13 @@ export function App() {
     },
     [paginatedTransactionsUtils, transactionsByEmployeeUtils]
   )
+
+  useEffect(() => {
+    if (paginatedTransactions?.data)
+      setTransactions([...(transactions ?? []), ...paginatedTransactions?.data])
+    else if (transactionsByEmployee)
+      setTransactions([...(transactions ?? []), ...transactionsByEmployee])
+  }, [paginatedTransactions, transactionsByEmployee])
 
   useEffect(() => {
     if (employees === null && !employeeUtils.loading) {
@@ -61,11 +83,18 @@ export function App() {
             label: `${item.firstName} ${item.lastName}`,
           })}
           onChange={async (newValue) => {
-            if (newValue === null) {
+            if (newValue === selectedEmployee) {
               return
             }
 
-            await loadTransactionsByEmployee(newValue.id)
+            setSelectedEmployee(newValue)
+            setTransactions([])
+
+            if (newValue === null) {
+              await loadAllTransactions()
+            } else {
+              await loadTransactionsByEmployee(newValue.id)
+            }
           }}
         />
 
