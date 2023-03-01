@@ -13,7 +13,8 @@
   "scripts": {
     "start": "react-scripts start",
     "upload": "codesandbox ./",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
