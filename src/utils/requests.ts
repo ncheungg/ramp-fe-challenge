@@ -40,7 +40,7 @@ export const getTransactionsPaginated = ({
 }
 
 export const getTransactionsByEmployee = ({ employeeId }: RequestByEmployeeParams) => {
-  if (!employeeId) {
+  if (!employeeId || employeeId === "") {
     return data.transactions
   }
 

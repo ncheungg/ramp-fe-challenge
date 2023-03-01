@@ -47,6 +47,8 @@ export function App() {
     }
   }, [employeeUtils.loading, employees, loadAllTransactions])
 
+  console.log({ transactions, selectedEmployee, paginatedTransactions })
+
   return (
     <Fragment>
       <main className="MainContainer">
@@ -85,7 +87,7 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && (
+          {transactions !== null && selectedEmployee?.id === "" && paginatedTransactions?.nextPage && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}
